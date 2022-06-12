@@ -18,18 +18,18 @@ Future<String> helloWorld() async {
   });
 }
 
-void main() {
-  // 위의 함수에서 아무리 async 와 await 를 사용했었어도 함수를 이용해서 받는 변수에 await 를 넣지 않으면 그냥 Future<String>
-  // 이 반환되는구나.
-  final future = helloWorld();
+void main() async {
+  final future = await helloWorld();
   print(future);
 }
 /*
 
-이 코드의 특징은 async 함수를 호출할 때, await 키워드를 사용하지 않은 것입니다. 이 코드의 실행 결과는 다음과 같습니다.
 
-Instance of 'Future<String>'
+이 코드의 특징은 async 함수를 호출할 때, await 키워드를 사용한 것입니다. 이 코드의 실행 결과는 다음과 같습니다.
+
+Hello World
 Hello World
 
-결과가 이와 같은 이유는 4-1 번 코드의 설명과 동일하기 때문에 생략하겠습니다.
+결과가 이와 같은 이유는 4-2 번 코드의 설명과 동일하기 때문에 생략하겠습니다.
+
 */

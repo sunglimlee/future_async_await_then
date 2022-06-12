@@ -10,35 +10,26 @@ async 함수는 무조건 Future 를 반환해야 합니다.
 await 라는 키워드를 함수 내부에서 사용한다면 해당 함수 스코프를 알려주는 { ... } 의 앞에 async 를 적어주기만 하면 됩니다.
  */
 
-Future<String> helloWorld() {
-  return Future.delayed(const Duration(seconds: 3), () {
+Future<String> helloWorld() async {
+  return await Future.delayed(const Duration(seconds: 3), () {
     const hello = "Hello World";
     print(hello);
     return hello;
   });
 }
-// [error] 'await' can only be used in 'async' or 'async*' methods.
-// await 를 사용하면 async 를 반드시 사용하자.
-void main() async {
-  final future = await helloWorld();
+
+void main() {
+  // 위의 함수에서 아무리 async 와 await 를 사용했었어도 함수를 이용해서 받는 변수에 await 를 넣지 않으면 그냥 Future<String>
+  // 이 반환되는구나.
+  final future = helloWorld();
   print(future);
 }
-
 /*
 
-이 코드의 특징은 Future 을 return 하는 함수를 호출할 때,
-await 키워드를 사용한 것입니다.
-main() 함수에서 await 키워드를 사용했기 때문에 async 함수로도 만들어 주었습니다.
-그 외에는 동일합니다. 이 코드의 실행 결과는 다음과 같습니다.
+이 코드의 특징은 async 함수를 호출할 때, await 키워드를 사용하지 않은 것입니다. 이 코드의 실행 결과는 다음과 같습니다.
 
-Hello World
+Instance of 'Future<String>'
 Hello World
 
-"어? helloWorld() 함수는 Future 를 return 해주는데
-왜 Hello World 가 2번 출력되지?" 하시는 분이 계실 겁니다.
-(제가 그랬습니다...)
-그 이유는 위에서 말씀드렸다시피 await 키워드를 만나면 해당 함수를 잠시 정지하고,
-await 키워드가 붙은 동작이 완료될 때까지 기다립니다.
-그리고 결과를, 상자안의 내용물을 바로 넘겨줍니다.
-이 방법을 통해 Future<String> 으로 String 을 얻을 수 있습니다.
+결과가 이와 같은 이유는 4-1 번 코드의 설명과 동일하기 때문에 생략하겠습니다.
 */

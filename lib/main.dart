@@ -1,67 +1,42 @@
 import 'dart:async';
 
 /*
-Future<int> 라는 상자가 있습니다. 이 상자는 지금은 닫혀있습니다. 하지만 이 상자를 준 함수가 말합니다.
-"지금은 그 상자는 닫혀있지만, 나중에 열리면 int 나 error 가 나올 거야. 두 경우 모두를 대비해 줘."
-이 상자를 받은 변수는 상자로부터 int 가 나올 때를 대비해 then 메소드를, error 가 나올 경우를 대비해 catchError 메소드를
-준비해야 합니다.
+이번에는 error 가 나오는 Future 을 보겠습니다.
+
  */
 
-Future<int> futureNumber(){
+Future<int> futureNumber() {
+  // 3초 후 Error!가 상자에서 나옵니다
   return Future<int>.delayed(const Duration(seconds: 3), () {
-    return 100;
+    throw 'Error!';
   });
 }
 
 void main() {
+  // future 라는 변수에서 미래에(3초 후에) error가 나올 것입니다
   Future<int> future = futureNumber();
-  future.then((value) {
-    //int 가 나오면 해당 값을 출력
-    print('val : $value');
-  }, ).catchError( (error) {
-    //error 를 이용해 해당 에러를 출력
+
+  future.then((val) {
+    // int가 나오면 해당 값을 출력
+    print('val: $val');
+  }).catchError((error) {
+    // error가 해당 에러를 출력
     print('error: $error');
   });
+
   print('기다리는 중');
 }
 
-
 /*
-futureNumber 함수는 3초가 되기 전까지는 닫혀있다가 3초가 되면 100이 나오는 상자 Future<int>를 return 합니다.
-main 함수에서 future 변수에 해당 함수의 return 값을 저장합니다. 여기서 주의해야 합니다.
-3초 후에 future 는 int 로 바뀌는 것이 아닙니다.
-
-future 는 계속해서 Future<int> 입니다. 그렇기 때문에 future 가 100으로 바뀌는 것이 아닙니다.
-
-그렇다면 어떻게 그 Future<int> 에서 나오는 값을 다루느냐.
-
-then 함수로 다룰 수 있습니다. 위 코드에서 future.then(...) 을 통해 다루고 있습니다.
-then 내부에는 또다른 함수가 들어있으며 이 함수로 Future<int> 로부터 나오는 값을 다룰 수 있는 것입니다.
-then 내부 함수에서 val 에 Future<int> 상자가 열렸을 때 나오는 값이 들어갈 것이므로 val: 100 이라고 출력됩니다.
+이번에는 futureNumber 함수에서 error 가 3초 후에 나올 상자 Future<int> 를 전해주었습니다.
+이번에는 catchError 함수가 수행될 차례입니다.
+then 함수와 마찬가지로 내부의 함수가 수행될 것입니다.
+위 코드의 경우 error 에 Future<int> 상자가 열렸을 때 나올 Error! 가 들어갈 것이므로 error: Error! 가 출력 될 것입니다.
 
 
 위 코드를 수행했을 때 다음과 같은 출력이 됩니다.
 
 기다리는 중
-val: 100
-
-"어째서 val: 100이 아니라 기다리는 중 이 먼저 출력되는거지?" 라고 생각하실 분들이 있을 것입니다.
-
-이 부분이 제가 위에서 Future 는 비동기를 위해 있다는 이유입니다.
-
-비동기와 동기가 무엇인지 간단히 설명드리자면 다음과 같습니다.
-
-동기란 C언어, C++과 같이 모든 동작을 차례대로 완료 후 수행하는 것
-비동기란 어떤 동작이 완료가 되지 않아도 다음 동작을 수행하는 것
-비동기처리는 보통 디스크로부터 읽거나 쓸 때, 네트워크 통신처럼 다소 오랜 시간이 필요한 경우에 유용합니다.
-해당 동작들이 완료될 때까지 기다리지 않고 다른 동작을 수행할 수 있기 때문이죠.
-
-그러면 다시 돌아와서 Future 는 비동기를 위해서 존재합니다. 위 코드에서 main 함수의 가장 마지막 줄에 print 가 있습니다만
-100줄의 코드였다고 가정해봅시다. 동기적으로 처리했을 경우 Future<int> 에서 값이 나올 때까지 100줄의 코드는 동작하지 않고
-정지해있을 것입니다. 이 100줄의 코드에 Future<int>로부터 나올 값이 전혀 필요없다면 정말 심한 낭비일 것입니다.
-
-이러한 낭비를 막고자 비동기적으로 처리하는 것입니다. Future<int> 에서 값이 나오지 않아도 계속해서 동작을 수행할 수 있도록 말이죠.
-그렇기 때문에 위 코드에서 3초가 지나 future 의 then 이 동작하기 전에 계속해서 코드를 수행하기 때문에
-가장 밑의 print 가 수행됩니다.
+error: Error!
 
  */

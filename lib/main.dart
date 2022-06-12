@@ -11,36 +11,34 @@ await 라는 키워드를 함수 내부에서 사용한다면 해당 함수 스�
  */
 
 Future<String> helloWorld() {
-  // 3초 후에 Future<String> 에서 "Hello World" 가 나옵니다
   return Future.delayed(const Duration(seconds: 3), () {
     const hello = "Hello World";
     print(hello);
     return hello;
   });
 }
-
-void main() {
-  final future = helloWorld();
+// [error] 'await' can only be used in 'async' or 'async*' methods.
+// await 를 사용하면 async 를 반드시 사용하자.
+void main() async {
+  final future = await helloWorld();
   print(future);
 }
 
-
 /*
-이 코드의 특징은 Future 을 return 하는 함수를 호출하지만 await 키워드를 사용하지 않은 것입니다.
-main() 함수에서 Future<String> 을 받아 future 에 저장하고 출력합니다. 이 코드의 실행결과는 다음과 같습니다.
 
-Instance of 'Future<String>'
+이 코드의 특징은 Future 을 return 하는 함수를 호출할 때,
+await 키워드를 사용한 것입니다.
+main() 함수에서 await 키워드를 사용했기 때문에 async 함수로도 만들어 주었습니다.
+그 외에는 동일합니다. 이 코드의 실행 결과는 다음과 같습니다.
+
+Hello World
 Hello World
 
-첫 번째 줄인 Instance of 'Future<String>' 은 main() 함수의 print(future) 에서,
-두 번째 줄인 Hello World 는 helloWorld() 함수에서 출력된 것입니다.
-어째서 future 의 출력순서가 첫 번째인지, Instance of 'Future<String>' 으로 출력 되는지 설명하겠습니다.
-
-출력 순서가 첫 번째인 이유는 await 키워드를 사용하지 않았으며
-then() 함수를 사용하지 않았으므로
-비동기적으로 처리되기 때문에 3초가 되기 전에 print(future) 가 수행됩니다.
-값이 Instance of 'Future<String>' 인 이유는 제가 계속 강조했다시피 Future 로 반환된 값은
-상자가 열렸을 때 나오는 값으로 바뀌는 것이 아니기 때문입니다.
-helloWorld() 함수의 return 타입은 Future<String> 이므로 future 의 타입은 String 으로 바뀌는 것이 아닌
-계속 Future<String> 입니다.
- */
+"어? helloWorld() 함수는 Future 를 return 해주는데
+왜 Hello World 가 2번 출력되지?" 하시는 분이 계실 겁니다.
+(제가 그랬습니다...)
+그 이유는 위에서 말씀드렸다시피 await 키워드를 만나면 해당 함수를 잠시 정지하고,
+await 키워드가 붙은 동작이 완료될 때까지 기다립니다.
+그리고 결과를, 상자안의 내용물을 바로 넘겨줍니다.
+이 방법을 통해 Future<String> 으로 String 을 얻을 수 있습니다.
+*/
